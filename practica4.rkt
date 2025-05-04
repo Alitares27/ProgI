@@ -115,8 +115,6 @@
   [on-mouse mouse-handler])
 
 ; Ej6
-
-
 (define MOSCA
   (bitmap "C:/Users/aldai/OneDrive/UNR/Racket/fly.png"))
 
@@ -134,6 +132,8 @@
   (- (random DELTAI)10)
   (- (random DELTAI)10)))
 
+; espacio : Estado -> Imagen
+; Dibuja la escena y si la mosca es atrapada muestra un mensaje
 (define (espacio m)
   (if (equal? (estado-pos m)ESTADO-FINAL)
       (place-image (text "MOSCA ATRAPADA" 30 "red")(/ ANC 2)(/ ALT 2)
@@ -143,6 +143,9 @@
                    (posn-y (estado-pos m))
                    (empty-scene ANC ALT))))
 
+; vuelo : Estado -> Estado
+; Calcula la nueva posicion de la mosca
+; y tambien hace que rebotesi toca un borde
 (define (vuelo m)
   (let* ([dx (estado-dx m)]
          [dy (estado-dy m)]
@@ -160,17 +163,24 @@
     (make-estado (make-posn nx ny) ndx ndy)))
 
 
+#|distance : posn -> Number
+  Calcula la distancia entre dos puntos|#
 (define (distance p1 p2)
   (sqrt (+(sqr (- (posn-x p1)(posn-x p2)))
           (sqr (- (posn-y p1)(posn-y p2))))))
 
-
+#|atrapar : Estado Number Number Evento -> Estado
+  evalua si las coordenadas donde se hizo click
+  esta cerca de la mosca para cambiar estado a atrapada |#
 (define (atrapar m x y e)
   (if (string=? e "button-down")
       (if(< (distance (estado-pos m)(make-posn x y)) GAMMA)
          (make-estado ESTADO-FINAL 0 0)
          m)
       m)) 
+
+#|muerta : Estado -> Boolean
+  Revisa si la posion es el ESTADO-FINAL|#
 
 (define (muerta m)
   (equal? (estado-pos m) ESTADO-FINAL))
