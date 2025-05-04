@@ -42,8 +42,7 @@
 (define STARTX (/ WIDTH 2))
 (define STARTY (/ HEIGHT 2))
 (define CENTER (make-posn STARTX STARTY))
-
-(define DELTA 10)
+(define DELTA 5)
 
 ; creator : Event -> Number
 ; transforma el estado del sistema en una imagen a mostrar a través
@@ -72,13 +71,17 @@
       (make-posn (posn-x p) (+ (posn-y p) DELTA))
      p))
 
-
+; sider : Number -> Number
+; modifica sumando la posicion horizontal del circulo graficado en el plano,
+; dependiendo del tamaño de la escena
 (define (sider p)
   (if (> (posn-x p) RADIOI)
       (make-posn (- (posn-x p) DELTA) (posn-y p))
       (posn-x)))
 
-
+; sidel : Number -> Number
+; modifica restando la posicion horizontal del circulo graficado en el plano,
+; dependiendo del tamaño de la escena
 (define (sidel p)
   (if (< (posn-x p) (- WIDTH RADIOI))
       (make-posn (+ (posn-x p) DELTA) (posn-y p))
@@ -97,6 +100,9 @@
     [else p]))
 
 
+; mouse-handler : posn Number Number String -> posn
+; captura las coordenadas donde se hizo click con el mouse
+; y actualiza la posicion del circulo
 (define (mouse-handler p x y event)
   (if
     (string=? event "button-down")
