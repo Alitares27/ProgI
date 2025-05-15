@@ -1,6 +1,6 @@
 ;; The first three lines of this file were inserted by DrRacket. They record metadata
 ;; about the language level of this file in a form that our tools can easily process.
-#reader(lib "htdp-intermediate-reader.ss" "lang")((modname part1) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+#reader(lib "htdp-intermediate-reader.ss" "lang")((modname practica0) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
 ;Op. Aritmeticas
 ; 1
 (-(* 12 5)(* 7 6))
@@ -22,6 +22,7 @@
 (string-append "El " "oso " "sala " "la " "sopa.")
 (string-length "Primer año")
 (number->string 42)
+
 ;1
 (string-append "Hola" "mundo")
 (string-append "Pro" "gra" "ma.")
