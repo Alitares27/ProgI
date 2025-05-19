@@ -6,60 +6,53 @@
 (require 2htdp/image)
 (require 2htdp/universe)
 
-
 ; Representamos el desplazamiento de una imagen sobre un plano,
-; la cual posee una posicion que puede ser modificada al presionar una tecla o presionar el mouse
+; la cual posee una posicion que puede ser modificada
+; al presionar una tecla o presionar el mouse
 
 (define AUTOIMG (bitmap "C:/Users/aldai/OneDrive/UNR/Racket/car.png"))
-(define LONGITUD 600)
-(define ANCHURA 200)
-(define LIMITED (- LONGITUD 60))
-(define LIMITEI (+ LONGITUD 60))
-(define INITIAL 60)
+(define-struct auto [hpos vel])
+(define INICIAL (make-auto 50 1))
+(define LARGO 800)
+(define ALTO 150)
+(define DELTA-VEL 10)
 
-(define-struct Auto [hpos vel])
+(define AUTO-INI INICIAL)
 
-; screen : Estado -> Image
+; pintura : Estado -> Image
 ; Dado un estado, dibuja la imagen del auto en su posición correspondiente
-(define (screen m)
+(define (pintura a)
   (place-image AUTOIMG
-               m (- ANCHURA 30)
-               (place-image
-                (rectangle LONGITUD 20 "solid" "black")
-                (/ LONGITUD 2) (- ANCHURA 10)
-               (empty-scene LONGITUD ANCHURA))))
+         (auto-hpos a) 130
+         (place-image (rectangle LARGO 30 "solid" "black")400 140
+         (empty-scene LARGO ALTO))))
 
-; driver : Estado String -> Estado
+; velocidad : Estado String -> Estado
 ; dado una tecla presionada, mueve el auto, lo reinicia o lo deja igual
-(define (driver m k)
-  (cond [(string=? k "up") (avanzar m)]
-        [(string=? k "down") (retroceder m)]
-        [(string=? k " ") INITIAL]))
+(define (velocidad a k)
+  (cond [(string=? k "up") (make-auto (auto-hpos a)(+ (auto-vel a) DELTA-VEL))]
+        [(string=? k "down") (make-auto (auto-hpos a)(- (auto-vel a) DELTA-VEL))]
+        [else a]))
 
-; avanzar : Estado -> Estado
-; Aumenta la posición del auto en X, hasta un límite derecho
-(define (avanzar m)
-  (if (>= m LIMITED)
-      m  
-      (+ m 3)))
-
-; retroceder : Estado -> Estado
-; Disminuye la posición del auto en X, hasta un límite izquierdo
-(define (retroceder m)  
-  (if (<= m 0)  
-      m 
-      (- m 3)))
+; mover > Estado -> estado
+; Dado un estado aumenta la velocidad de desplazamiento del auto
+; y controla que el auto no salga de escena
+(define (mover a)
+  (if (and (<= 0 (+ (auto-hpos a) (auto-vel a)))
+           (<= (+ (auto-hpos a) 50) LARGO))
+      (make-auto (+ (auto-hpos a) (auto-vel a)) (auto-vel a))
+      (make-auto (auto-hpos a) 0)))
 
 ; manipulador : Estado Number Number String -> Estado
 ; al presionar el mouse, mueve el auto a la posición X del clic
 (define (manipulador m x y event)
-  (cond [(string=? event "button-down") x]
+  (cond [(string=? event "button-down") (make-auto x (auto-vel m))]
         [else m]))
 
 
-(big-bang INITIAL
-  [to-draw screen]
-  [on-tick avanzar 0.5]
-  [on-key driver]
+(big-bang AUTO-INI
+  [to-draw pintura]
+  [on-tick mover 0.05]
+  [on-key velocidad]
   [on-mouse manipulador]
   )
