@@ -11,6 +11,9 @@
 (define (alorigen n)
   (sqrt (+ (sqr (posn-x n))(sqr (posn-y n)))))
 
+(alorigen (make-posn 3 4))
+
+
 ; cerca : Listof Posn -> Posn
 ; dada una lista de Posn devuelve una lista
 ; de coordenada que son menor a la constante MAX
