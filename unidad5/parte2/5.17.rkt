@@ -11,4 +11,4 @@
   (cond [(empty? l) empty]
         [else (length l)]))
 
-(largo (list 1 "hola" #t -5))
+(check-expect(largo (list 1 "hola" #t -5))4)
